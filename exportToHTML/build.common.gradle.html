@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>build.common.gradle</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #9399b2; font-style: italic;}
+.s1 { color: #cdd6f4;}
+.s2 { color: #cba6f7;}
+.s3 { color: #a6e3a1;}
+.s4 { color: #9399b2;}
+.s5 { color: #fab387;}
+.s6 { color: #89dceb;}
+.s7 { color: #f5c2e7;}
+</style>
+</head>
+<body bgcolor="#1e1e2e">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+build.common.gradle</font>
+</center></td></tr></table>
+<pre><span class="s0">/** 
+ * build.common.gradle 
+ * 
+ * Try to avoid editing this file, as it may be updated from time to time as the FTC SDK 
+ * evolves. Rather, if it is necessary to customize the build process, do those edits in 
+ * the build.gradle file in TeamCode. 
+ * 
+ * This file contains the necessary content of the 'build.gradle' files for robot controller 
+ * applications built using the FTC SDK. Each individual 'build.gradle' in those applications 
+ * can simply contain the one line: 
+ * 
+ *      apply from: '../build.common.gradle' 
+ * 
+ * which will pick up this file here. This approach allows makes it easier to integrate 
+ * updates to the FTC SDK into your code. 
+ */</span>
+
+<span class="s2">import </span><span class="s1">java.util.regex.Pattern</span>
+
+<span class="s1">apply plugin: </span><span class="s3">'com.android.application'</span>
+
+<span class="s1">android </span><span class="s4">{</span>
+
+    <span class="s1">compileSdk </span><span class="s5">34</span>
+
+    <span class="s1">signingConfigs </span><span class="s4">{</span>
+        <span class="s1">release </span><span class="s4">{</span>
+            <span class="s2">def </span><span class="s1">apkStoreFile </span><span class="s6">= </span><span class="s1">System.getenv</span><span class="s4">(</span><span class="s3">&quot;APK_SIGNING_STORE_FILE&quot;</span><span class="s4">)</span>
+            <span class="s2">if </span><span class="s4">(</span><span class="s1">apkStoreFile </span><span class="s6">!= </span><span class="s2">null</span><span class="s4">) {</span>
+                <span class="s1">keyAlias System.getenv</span><span class="s4">(</span><span class="s3">&quot;APK_SIGNING_KEY_ALIAS&quot;</span><span class="s4">)</span>
+                <span class="s1">keyPassword System.getenv</span><span class="s4">(</span><span class="s3">&quot;APK_SIGNING_KEY_PASSWORD&quot;</span><span class="s4">)</span>
+                <span class="s1">storeFile file</span><span class="s4">(</span><span class="s1">System.getenv</span><span class="s4">(</span><span class="s3">&quot;APK_SIGNING_STORE_FILE&quot;</span><span class="s4">))</span>
+                <span class="s1">storePassword System.getenv</span><span class="s4">(</span><span class="s3">&quot;APK_SIGNING_STORE_PASSWORD&quot;</span><span class="s4">)</span>
+            <span class="s4">} </span><span class="s2">else </span><span class="s4">{</span>
+                <span class="s1">keyAlias </span><span class="s3">'androiddebugkey'</span>
+                <span class="s1">keyPassword </span><span class="s3">'android'</span>
+                <span class="s1">storeFile rootProject.file</span><span class="s4">(</span><span class="s3">'libs/ftc.debug.keystore'</span><span class="s4">)</span>
+                <span class="s1">storePassword </span><span class="s3">'android'</span>
+            <span class="s4">}</span>
+        <span class="s4">}</span>
+
+        <span class="s1">debug </span><span class="s4">{</span>
+            <span class="s1">keyAlias </span><span class="s3">'androiddebugkey'</span>
+            <span class="s1">keyPassword </span><span class="s3">'android'</span>
+            <span class="s1">storeFile rootProject.file</span><span class="s4">(</span><span class="s3">'libs/ftc.debug.keystore'</span><span class="s4">)</span>
+            <span class="s1">storePassword </span><span class="s3">'android'</span>
+        <span class="s4">}</span>
+    <span class="s4">}</span>
+
+    <span class="s1">defaultConfig </span><span class="s4">{</span>
+        <span class="s1">signingConfig signingConfigs.debug</span>
+        <span class="s1">applicationId </span><span class="s3">'com.qualcomm.ftcrobotcontroller'</span>
+        <span class="s1">minSdkVersion </span><span class="s5">24</span>
+        <span class="s0">//noinspection ExpiredTargetSdkVersion</span>
+        <span class="s1">targetSdkVersion </span><span class="s5">28</span>
+
+        <span class="s0">/** 
+         * We keep the versionCode and versionName of robot controller applications in sync with 
+         * the master information published in the AndroidManifest.xml file of the FtcRobotController 
+         * module. This helps avoid confusion that might arise from having multiple versions of 
+         * a robot controller app simultaneously installed on a robot controller device. 
+         * 
+         * We accomplish this with the help of a funky little Groovy script that maintains that 
+         * correspondence automatically. 
+         * 
+         * @see &lt;a href=&quot;http://developer.android.com/tools/building/configuring-gradle.html&quot;&gt;Configure Your Build&lt;/a&gt; 
+         * @see &lt;a href=&quot;http://developer.android.com/tools/publishing/versioning.html&quot;&gt;Versioning Your App&lt;/a&gt; 
+         */</span>
+        <span class="s2">def </span><span class="s1">manifestFile </span><span class="s6">= </span><span class="s1">project</span><span class="s4">(</span><span class="s3">':FtcRobotController'</span><span class="s4">)</span><span class="s1">.file</span><span class="s4">(</span><span class="s3">'src/main/AndroidManifest.xml'</span><span class="s4">)</span><span class="s1">;</span>
+        <span class="s2">def </span><span class="s1">manifestText </span><span class="s6">= </span><span class="s1">manifestFile.getText</span><span class="s4">()</span>
+        <span class="s0">//</span>
+        <span class="s2">def </span><span class="s1">vCodePattern </span><span class="s6">= </span><span class="s1">Pattern.compile</span><span class="s4">(</span><span class="s3">&quot;versionCode=</span><span class="s7">\&quot;</span><span class="s3">(</span><span class="s7">\\</span><span class="s3">d+(</span><span class="s7">\\</span><span class="s3">.</span><span class="s7">\\</span><span class="s3">d+)*)</span><span class="s7">\&quot;</span><span class="s3">&quot;</span><span class="s4">)</span>
+        <span class="s2">def </span><span class="s1">matcher </span><span class="s6">= </span><span class="s1">vCodePattern.matcher</span><span class="s4">(</span><span class="s1">manifestText</span><span class="s4">)</span>
+        <span class="s1">matcher.find</span><span class="s4">()</span>
+        <span class="s2">def </span><span class="s1">vCode </span><span class="s6">= </span><span class="s1">Integer.parseInt</span><span class="s4">(</span><span class="s1">matcher.group</span><span class="s4">(</span><span class="s5">1</span><span class="s4">))</span>
+        <span class="s0">//</span>
+        <span class="s2">def </span><span class="s1">vNamePattern </span><span class="s6">= </span><span class="s1">Pattern.compile</span><span class="s4">(</span><span class="s3">&quot;versionName=</span><span class="s7">\&quot;</span><span class="s3">(.*)</span><span class="s7">\&quot;</span><span class="s3">&quot;</span><span class="s4">)</span>
+        <span class="s1">matcher </span><span class="s6">= </span><span class="s1">vNamePattern.matcher</span><span class="s4">(</span><span class="s1">manifestText</span><span class="s4">)</span><span class="s1">;</span>
+        <span class="s1">matcher.find</span><span class="s4">()</span>
+        <span class="s2">def </span><span class="s1">vName </span><span class="s6">= </span><span class="s1">matcher.group</span><span class="s4">(</span><span class="s5">1</span><span class="s4">)</span>
+        <span class="s0">//</span>
+        <span class="s1">versionCode vCode</span>
+        <span class="s1">versionName vName</span>
+    <span class="s4">}</span>
+
+    <span class="s0">// http://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.BuildType.html</span>
+    <span class="s1">buildTypes </span><span class="s4">{</span>
+        <span class="s1">release </span><span class="s4">{</span>
+            <span class="s1">signingConfig signingConfigs.release</span>
+
+            <span class="s1">ndk </span><span class="s4">{</span>
+                <span class="s1">abiFilters </span><span class="s3">&quot;armeabi-v7a&quot;</span><span class="s1">, </span><span class="s3">&quot;arm64-v8a&quot;</span>
+            <span class="s4">}</span>
+        <span class="s4">}</span>
+        <span class="s1">debug </span><span class="s4">{</span>
+            <span class="s1">debuggable </span><span class="s2">true</span>
+            <span class="s1">jniDebuggable </span><span class="s2">true</span>
+            <span class="s1">ndk </span><span class="s4">{</span>
+                <span class="s1">abiFilters </span><span class="s3">&quot;armeabi-v7a&quot;</span><span class="s1">, </span><span class="s3">&quot;arm64-v8a&quot;</span>
+            <span class="s4">}</span>
+        <span class="s4">}</span>
+    <span class="s4">}</span>
+
+    <span class="s1">compileOptions </span><span class="s4">{</span>
+        <span class="s1">sourceCompatibility JavaVersion.VERSION_1_8</span>
+        <span class="s1">targetCompatibility JavaVersion.VERSION_1_8</span>
+    <span class="s4">}</span>
+
+    <span class="s1">packagingOptions </span><span class="s4">{</span>
+        <span class="s1">pickFirst </span><span class="s3">'**/*.so'</span>
+    <span class="s4">}</span>
+    <span class="s1">ndkVersion </span><span class="s3">'21.3.6528147'</span>
+<span class="s4">}</span>
+
+<span class="s1">repositories </span><span class="s4">{</span>
+<span class="s4">}</span>
+
+</pre>
+</body>
+</html>
