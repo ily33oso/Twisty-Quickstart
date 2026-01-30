@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.pedropathing.control.FilteredPIDFCoefficients;
+import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -14,7 +16,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(10);
+            .mass(10)
+            .forwardZeroPowerAcceleration(-31.674933053724075)
+            .lateralZeroPowerAcceleration(-67.4086666132413)
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.2,0,0.025,0))
+            //.secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.08,0,0.01,0))
+            .headingPIDFCoefficients(new PIDFCoefficients(1,0,0.05,0))
+            //.secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(1.5,0,0.01,0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.008,0.0,0.000009,0.6,0.0));
+
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
@@ -22,6 +32,7 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
+                .pinpointLocalizer(localizerConstants)
                 .build();
     }
 
@@ -34,7 +45,10 @@ public class Constants {
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .xVelocity(69.44377652866635)
+            .yVelocity(53.1552710345411);
+
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(0)
