@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -16,8 +15,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "Blue Big Launch Zone", group = "robot")
-public class twisted extends LinearOpMode {
+@Autonomous(name = "PLS WORK SPEED (RED)", group = "robot")
+public class metal extends LinearOpMode {
 
     // ================= PEDRO =================
     private Follower follower;
@@ -29,10 +28,11 @@ public class twisted extends LinearOpMode {
     private DcMotorEx intake;
     private Servo rstopper, lstopper;
 
-    // ================= POSES =================
-    private final Pose startPose = new Pose(22.976, 125.504, Math.toRadians(-40));
-    private final Pose p1        = new Pose(59, 89, Math.toRadians(-40));
-    private final Pose p2        = new Pose(48.552, 76.200);
+    // ================= POSES (RED SIDE) =================
+    // Blue → Red mirror: y = 144 - y, heading = -heading
+    private final Pose startPose = new Pose(22.976, 18.496, Math.toRadians(40));
+    private final Pose p1        = new Pose(59, 55, Math.toRadians(40));
+    private final Pose p2        = new Pose(48.552, 67.8);
 
     // ================= PATHS =================
     private PathChain path1, path2;
@@ -74,7 +74,7 @@ public class twisted extends LinearOpMode {
 
         initShooterMech();
 
-        telemetry.addLine("READY");
+        telemetry.addLine("READY (RED)");
         telemetry.update();
 
         waitForStart();
@@ -97,7 +97,10 @@ public class twisted extends LinearOpMode {
 
         path1 = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, p1))
-                .setLinearHeadingInterpolation(startPose.getHeading(), p1.getHeading())
+                .setLinearHeadingInterpolation(
+                        startPose.getHeading(),
+                        p1.getHeading()
+                )
                 .build();
 
         path2 = follower.pathBuilder()
