@@ -15,7 +15,7 @@ public class teleyD extends LinearOpMode {
     //encoders for lift
 
     // ================= HARDWARE =================
-    DcMotor fr, fl, bl, br, rslide, lslide;
+    DcMotor fr, fl, bl, br, rslide, lslide, lintake, rintake;
     Servo rclaw, lclaw, rclamp, lclamp;
     IMU imu;
 
@@ -40,6 +40,8 @@ public class teleyD extends LinearOpMode {
         bl = hardwareMap.get(DcMotor.class, "bl");
         lslide = hardwareMap.get(DcMotor.class, "lslide");
         rslide = hardwareMap.get(DcMotor.class, "rslide");
+        rintake = hardwareMap.get(DcMotor.class, "rintake");
+        lintake = hardwareMap.get(DcMotor.class, "lintake");
 
 
         rclaw = hardwareMap.get(Servo.class, "rclaw");
@@ -53,6 +55,9 @@ public class teleyD extends LinearOpMode {
         fl.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
         bl.setDirection(DcMotor.Direction.REVERSE);
+
+        rintake.setDirection(DcMotor.Direction.FORWARD);
+        lintake.setDirection(DcMotor.Direction.REVERSE);
 
         rslide.setDirection(DcMotorSimple.Direction.REVERSE);
         lslide.setDirection(DcMotorSimple.Direction.FORWARD);
