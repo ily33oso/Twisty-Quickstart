@@ -43,7 +43,6 @@ public class teleyD extends LinearOpMode {
         rintake = hardwareMap.get(DcMotor.class, "rintake");
         lintake = hardwareMap.get(DcMotor.class, "lintake");
 
-
         rclaw = hardwareMap.get(Servo.class, "rclaw");
         lclaw = hardwareMap.get(Servo.class, "lclaw");
         rclamp = hardwareMap.get(Servo.class, "rclamp");
@@ -64,14 +63,10 @@ public class teleyD extends LinearOpMode {
         rslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
-
         rclaw.setDirection(Servo.Direction.REVERSE);
         lclaw.setDirection(Servo.Direction.FORWARD);
         rclamp.setDirection(Servo.Direction.REVERSE);
         lclamp.setDirection(Servo.Direction.FORWARD);
-
-
 
         imu.initialize(new IMU.Parameters(
                 new RevHubOrientationOnRobot(
@@ -101,6 +96,15 @@ public class teleyD extends LinearOpMode {
 
             if (gamepad1.y) imu.resetYaw();
 
+            // ================= INTAKE =================
+            if (gamepad2.a) {
+                lintake.setPower(1);
+                rintake.setPower(1);
+            } else {
+                lintake.setPower(0);
+                rintake.setPower(0);
+            }
+
 
             // ================= CLAW =================
             if (gamepad2.right_bumper) {
@@ -111,12 +115,29 @@ public class teleyD extends LinearOpMode {
                 lclaw.setPosition(0);
             }
 
+            // ================= CLAMP =================
+            if (gamepad1.left_bumper){
+                rclamp.setPosition(.23);
+                lclamp.setPosition(.23);
+            } else {
+                rclamp.setPosition(0);
+                lclamp.setPosition(0);
+            }
 
             // ================= LIFT =================
             int pos = lslide.getCurrentPosition();
-            if (gamepad1.dpad_up && pos < MAX_TICKS) lslide.setPower(UP_POWER);
-            else if (gamepad1.dpad_down && pos > MIN_TICKS) lslide.setPower(DOWN_POWER);
-            else lslide.setPower(0);
+            if (gamepad1.dpad_up && pos < MAX_TICKS) {
+                lslide.setPower(UP_POWER);
+                rslide.setPower(UP_POWER);
+            }
+            else if (gamepad1.dpad_down && pos > MIN_TICKS) {
+                lslide.setPower(DOWN_POWER);
+                rslide.setPower(DOWN_POWER);
+            }
+            else {
+                lslide.setPower(0);
+                rslide.setPower(0);
+            }
 
             telemetry.update();
         }
