@@ -52,6 +52,7 @@ public class test extends OpMode {
             lclamp.setPosition(0);
         }
 
+
         // ================= INTAKE =================
         if (gamepad2.a) {
             lintake.setPower(.5);
