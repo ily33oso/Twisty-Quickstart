@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @TeleOp
 public class clampandbase extends OpMode {
 
-    DcMotor fr, fl, br, bl;
+    DcMotor fr, fl, br, bl,rintake,lintake;
     Servo rclamp, lclamp;
     IMU imu;
 
@@ -23,6 +23,9 @@ public class clampandbase extends OpMode {
         fl = hardwareMap.get(DcMotor.class, "fl");
         br = hardwareMap.get(DcMotor.class, "br");
         bl = hardwareMap.get(DcMotor.class, "bl");
+
+        rintake = hardwareMap.get(DcMotor.class, "rintake");
+        lintake = hardwareMap.get(DcMotor.class, "lintake");
 
         rclamp = hardwareMap.get(Servo.class, "rclamp");
         lclamp = hardwareMap.get(Servo.class, "lclamp");
@@ -79,6 +82,15 @@ public class clampandbase extends OpMode {
         } else {
             rclamp.setPosition(0);
             lclamp.setPosition(0);
+        }
+
+        // ================= INTAKE =================
+        if (gamepad1.a) {
+            lintake.setPower(.5);
+            rintake.setPower(.5);
+        } else {
+            lintake.setPower(0);
+            rintake.setPower(0);
         }
     }
 }

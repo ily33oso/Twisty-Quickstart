@@ -64,8 +64,8 @@ public class test extends OpMode {
 
         //claw
         if (gamepad2.x){
-            rclaw.setPosition(.3);
-            lclaw.setPosition(.3);
+            rclaw.setPosition(.1);
+            lclaw.setPosition(.1);
         } else{
             rclaw.setPosition(0);
             lclaw.setPosition(0);
