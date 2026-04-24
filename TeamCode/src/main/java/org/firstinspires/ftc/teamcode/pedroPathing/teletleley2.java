@@ -13,7 +13,7 @@ public class teletleley2 extends LinearOpMode {
 
     // ================= MECHANISMS =================
     DcMotor rintake, lintake;
-
+    DcMotor lslide, rslide;
     Servo rclamp, lclamp;
     Servo rclaw, lclaw;
 
@@ -30,6 +30,9 @@ public class teletleley2 extends LinearOpMode {
         fl = hardwareMap.get(DcMotor.class, "fl");
         br = hardwareMap.get(DcMotor.class, "br");
         bl = hardwareMap.get(DcMotor.class, "bl");
+
+        rslide = hardwareMap.get(DcMotor.class, "rslide");
+        lslide = hardwareMap.get(DcMotor.class, "lslide");
 
         rintake = hardwareMap.get(DcMotor.class, "rintake");
         lintake = hardwareMap.get(DcMotor.class, "lintake");
@@ -50,6 +53,9 @@ public class teletleley2 extends LinearOpMode {
 
         rintake.setDirection(DcMotor.Direction.FORWARD);
         lintake.setDirection(DcMotor.Direction.REVERSE);
+
+        rslide.setDirection(DcMotor.Direction.FORWARD);
+        lslide.setDirection(DcMotor.Direction.FORWARD);
 
         rclamp.setDirection(Servo.Direction.REVERSE);
         lclamp.setDirection(Servo.Direction.FORWARD);
@@ -94,6 +100,15 @@ public class teletleley2 extends LinearOpMode {
             } else {
                 rintake.setPower(0);
                 lintake.setPower(0);
+            }
+
+            // ================= SLIDES =================
+            if (gamepad1.b) {
+                rslide.setPower(0.5);
+                lslide.setPower(0.5);
+            } else {
+                rslide.setPower(0);
+                lslide.setPower(0);
             }
 
             // ================= CLAMP =================
