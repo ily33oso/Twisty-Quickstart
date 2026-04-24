@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class test extends OpMode {
     DcMotor fr, fl, br, bl, rintake, lintake;
-    Servo rclamp, lclamp, rclaw, lclaw;
+    Servo rclamp, lclamp, rclaw, lclaw, arm;
 
     @Override
     public void init() {
@@ -26,6 +26,8 @@ public class test extends OpMode {
         rclaw=hardwareMap.get(Servo.class, "rclaw");
         lclaw=hardwareMap.get(Servo.class, "lclaw");
 
+        arm =hardwareMap.get(Servo.class, "arm");
+
         fr.setDirection(DcMotor.Direction.FORWARD);
         fl.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
@@ -39,6 +41,8 @@ public class test extends OpMode {
 
         rclaw.setDirection(Servo.Direction.REVERSE);
         lclaw.setDirection(Servo.Direction.FORWARD);
+
+        arm.setDirection(Servo.Direction.FORWARD);
     }
 
     @Override
@@ -62,8 +66,8 @@ public class test extends OpMode {
             rintake.setPower(0);
         }
 
-        //claw
-        if (gamepad2.x){
+        // ================= claw =================
+        if (gamepad2.b){
             rclaw.setPosition(.1);
             lclaw.setPosition(.1);
         } else{
@@ -71,6 +75,12 @@ public class test extends OpMode {
             lclaw.setPosition(0);
         }
 
+        // ================= arm =================
+        if (gamepad2.right_bumper){
+            arm.setPosition(1);
+        } else{
+            arm.setPosition(0);
+        }
 
 
 
